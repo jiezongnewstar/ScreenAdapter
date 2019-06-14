@@ -29,7 +29,7 @@ public class SimpleActivity extends Activity {
 
 //        setContentView(R.layout.percent_relativelayout);
 //        setContentView(R.layout.percent_linearlayout);
-//        setContentView(R.layout.percent_framelayout);
+        setContentView(R.layout.percent_framelayout);
 
     }
 }
