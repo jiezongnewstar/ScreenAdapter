@@ -14,7 +14,7 @@ import android.util.DisplayMetrics;
  */
 public class Density {
 
-    private static final float DEVICE_WIDTH = 1080;                //设计（参考）设备宽度 单位dp  即320dp
+    private static final float DEVICE_WIDTH = 1080;                //设计（参考）设备宽度 单位dp  例：320dp
 
     private static float appDensity;                              //屏幕密度
     private static float appScaleDensity;                         //字体缩放比例，默认appDensity
