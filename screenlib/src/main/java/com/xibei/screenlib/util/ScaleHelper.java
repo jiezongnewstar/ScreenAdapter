@@ -78,6 +78,9 @@ public class ScaleHelper {
 
 
 
+
+
+
     //水平缩放比例
     public float getScaleX(){
         return mDisplayWidth / UI_WIDTH;

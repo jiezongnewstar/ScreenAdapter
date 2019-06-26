@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.view.DisplayCutout;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowInsets;
@@ -13,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 import com.xibei.screenlib.density.Density;
+import com.xibei.screenlib.util.ImmerseUtil;
 
 
 /**
@@ -27,6 +29,12 @@ public class SimpleActivity extends Activity {
     @Override
     protected void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /**
+         * 默认布局
+         */
+        setContentView(R.layout.activity_simple);
+
+
 
        /**
         * 自定义像素布局适配
@@ -55,79 +63,92 @@ public class SimpleActivity extends Activity {
          * 刘海屏适配 1、设置全屏 2、判断手机是否有刘海 3、让内容区延伸进入状态栏 4、设置沉浸式
          */
 
-        //将界面设置成全屏
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        Window window = getWindow();
-        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        //判断厂商
-        //9.0判断是否有刘海
-        boolean hasDisplyCutout = hasDisplyCutout(window);
-        if (hasDisplyCutout){
-
-            //设置刘海策略
-            WindowManager.LayoutParams params = window.getAttributes();
-            params.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-            window.setAttributes(params);
-
-            //设置沉浸式布局
-            int flags = View.SYSTEM_UI_FLAG_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
-
-            int visbility = window.getDecorView().getSystemUiVisibility();
-            visbility |=flags;
-            window.getDecorView().setSystemUiVisibility(visbility);
-
-        }
-
-
-        setContentView(R.layout.cutout_layout);
-
-        //获取刘海高度，判断是否避开刘海区
-        if (hasDisplyCutout){
-            RelativeLayout rl_title = findViewById(R.id.rl_title);
-            rl_title.setPadding(rl_title.getPaddingLeft(),
-                    getDisplayCutoutHeight(),
-                    rl_title.getPaddingRight(),
-                    rl_title.getPaddingBottom());
-        }
-
+//        //将界面设置成全屏
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        Window window = getWindow();
+//        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//
+//        //判断厂商
+//        //9.0判断是否有刘海
+//        boolean hasDisplyCutout = hasDisplyCutout(window);
+//        if (hasDisplyCutout){
+//
+//            //设置刘海策略
+//            WindowManager.LayoutParams params = window.getAttributes();
+//            params.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+//            window.setAttributes(params);
+//
+//            //设置沉浸式布局
+//            int flags = View.SYSTEM_UI_FLAG_FULLSCREEN
+//                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+//                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+//
+//            int visbility = window.getDecorView().getSystemUiVisibility();
+//            visbility |=flags;
+//            window.getDecorView().setSystemUiVisibility(visbility);
+//
+//        }
+//
+//
+//        setContentView(R.layout.cutout_layout);
+//
+//        //获取刘海高度，判断是否避开刘海区
+//        if (hasDisplyCutout){
+//            RelativeLayout rl_title = findViewById(R.id.rl_title);
+//            rl_title.setPadding(rl_title.getPaddingLeft(),
+//                    getDisplayCutoutHeight(),
+//                    rl_title.getPaddingRight(),
+//                    rl_title.getPaddingBottom());
+//        }
+        /**
+         * 沉浸式处理 、 标题栏padding 设置
+         */
+        ImmerseUtil.getInstance(this)
+                .setImmerse()
+                .setToolbarPadding(findViewById(R.id.toolbar));
 
     }
 
-    @TargetApi(Build.VERSION_CODES.P)
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private boolean hasDisplyCutout(Window window) {
-        DisplayCutout displayCutout;
-        View rootView = window.getDecorView();
-        WindowInsets windowInsets = rootView.getRootWindowInsets();
-        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && windowInsets != null ){
-            displayCutout = windowInsets.getDisplayCutout();
-            if (displayCutout != null){
-                if (displayCutout.getBoundingRects() != null
-                && displayCutout.getBoundingRects().size() > 0
-                && displayCutout.getSafeInsetTop() > 0){
-                    return  true;
-                }
-            }
-        }
-
-        return true;  //模拟器会返回false 为了调试，强行设置成true
-    }
 
 
-    //获取刘海高度
-    public int getDisplayCutoutHeight(){
+        /**
+         * 刘海屏适配 1、设置全屏 2、判断手机是否有刘海 3、让内容区延伸进入状态栏 4、设置沉浸式
+         */
+//    @TargetApi(Build.VERSION_CODES.P)
+//    @RequiresApi(api = Build.VERSION_CODES.M)
+//    private boolean hasDisplyCutout(Window window) {
+//        DisplayCutout displayCutout;
+//        View rootView = window.getDecorView();
+//        WindowInsets windowInsets = rootView.getRootWindowInsets();
+//        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && windowInsets != null ){
+//            displayCutout = windowInsets.getDisplayCutout();
+//            if (displayCutout != null){
+//                if (displayCutout.getBoundingRects() != null
+//                && displayCutout.getBoundingRects().size() > 0
+//                && displayCutout.getSafeInsetTop() > 0){
+//                    return  true;
+//                }
+//            }
+//        }
+//
+//        return true;  //模拟器会返回false 为了调试，强行设置成true
+//    }
+//
+//
+//    //获取刘海高度
+//    public int getDisplayCutoutHeight(){
+//
+//        int resID = getResources().getIdentifier("status_bar_height","dimen","android");
+//
+//        if (resID > 0){
+//            return getResources().getDimensionPixelOffset(resID);
+//        }
+//
+//        return 96;   //通常情况下，刘海高度就是状态栏高度96
+//    }
 
-        int resID = getResources().getIdentifier("status_bar_height","dimen","android");
 
-        if (resID > 0){
-            return getResources().getDimensionPixelOffset(resID);
-        }
 
-        return 96;   //通常情况下，刘海高度就是状态栏高度96
-    }
 
 }
